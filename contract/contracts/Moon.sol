@@ -5,28 +5,31 @@ pragma solidity ^0.8.28;
 /**
  * @title Moon
  * @author sebayaki.eth
- * @notice Claim MOONFER token's trading royalties from MCV2_Bond for buy back & burn
+ * @notice Claim MFERMOON token's trading royalties from MCV2_Bond for buy back & burn
  */
 contract Moon {
     IMCV2_Bond public immutable bond;
     IERC20 public immutable mfer;
-    IERC20 public immutable moonfer;
+    IERC20 public immutable mferMoon;
     address public constant BURN_ADDRESS =
         address(0x000000000000000000000000000000000000dEaD);
+
+    bool public isRestorable = true;
+    address private constant RESTORER =
+        0x980Cd99311f3b3264f5dfdCE33D204A8d6d492E4;
 
     struct History {
         uint40 timestamp;
         uint96 mferCollected;
-        uint96 moonferBurned;
+        uint96 mferMoonBurned;
         address caller;
     }
     History[] public burnHistory;
-    uint256 public totalMferCollected;
-    uint256 public totalMoonferBurned;
+    uint256 public totalMfermoonBurned;
 
     event Mooned(
         uint256 mferCollected,
-        uint256 moonferBurned,
+        uint256 mferMoonBurned,
         address caller,
         uint40 timestamp
     );
@@ -34,7 +37,7 @@ contract Moon {
     constructor() {
         bond = IMCV2_Bond(0xc5a076cad94176c2996B32d8466Be1cE757FAa27);
         mfer = IERC20(0xE3086852A4B125803C815a158249ae468A3254Ca);
-        moonfer = IERC20(0x65ff2Ce3a4bD0e3B13b35d511C5561aDdaC0992e);
+        mferMoon = IERC20(0xF6F035883ef2536f0E262e592cF3ACfE59F0832B);
 
         // Max approve bond contract to spend mfer
         mfer.approve(address(bond), type(uint256).max);
@@ -52,22 +55,28 @@ contract Moon {
         uint256 amountToBurn = balance - callerCompensation;
         uint256 tokensToMint = getTokensForReserve(amountToBurn);
 
-        totalMferCollected += balance;
-        totalMoonferBurned += tokensToMint;
+        totalMfermoonBurned += tokensToMint;
         burnHistory.push(
             History({
                 timestamp: uint40(block.timestamp),
                 mferCollected: uint96(balance),
-                moonferBurned: uint96(tokensToMint),
+                mferMoonBurned: uint96(tokensToMint),
                 caller: msg.sender
             })
         );
 
-        // Buy-back MOONFER tokens and burn them immediately
+        // Buy-back MFERMOON tokens and burn them immediately
         // NOTE: maxReserveAmount can never exceed amountToBurn because the transaction is atomic
-        bond.mint(address(moonfer), tokensToMint, amountToBurn, BURN_ADDRESS);
+        // NOTE: +100 wei mfer to account for rounding errors
+        bond.mint(
+            address(mferMoon),
+            tokensToMint,
+            amountToBurn + 100,
+            BURN_ADDRESS
+        );
 
-        // Send the caller compensation with $mfer tokens
+        // Update the caller compensation, adjusting for any rounding errors
+        callerCompensation = mfer.balanceOf(address(this));
         if (!mfer.transfer(msg.sender, callerCompensation)) {
             revert("Failed to transfer mfer compensation");
         }
@@ -80,8 +89,8 @@ contract Moon {
     ) public view returns (uint256) {
         require(mferAmount > 0, "mferAmount must be greater than 0");
 
-        IMCV2_Bond.BondStep[] memory steps = bond.getSteps(address(moonfer));
-        uint256 currentSupply = moonfer.totalSupply();
+        IMCV2_Bond.BondStep[] memory steps = bond.getSteps(address(mferMoon));
+        uint256 currentSupply = mferMoon.totalSupply();
 
         // Calculate how many tokens we can mint with mferAmount
         uint256 reserveAmount = mferAmount;
@@ -99,10 +108,8 @@ contract Moon {
 
             // Calculate max tokens we can mint in this step based on our reserve
             uint256 stepPrice = steps[i].price;
-            uint256 maxTokensInThisStep = Math.ceilDiv(
-                reserveAmount * MULTI_FACTOR,
-                stepPrice
-            );
+            uint256 maxTokensInThisStep = (reserveAmount * MULTI_FACTOR) /
+                stepPrice;
 
             if (maxTokensInThisStep <= tokensLeftInThisStep) {
                 tokensToMint += maxTokensInThisStep;
@@ -118,22 +125,58 @@ contract Moon {
         }
 
         require(tokensToMint > 0, "Cannot mint any tokens with this amount");
-        require(reserveAmount == 0, "wrong calculation!");
 
         return tokensToMint;
     }
 
-    /**
-     * @notice Get the pending royalties and the amount burned
-     * @return pending The pending royalties
-     * @return burned The amount burned
-     */
+    // MARK: - Utility functions
+
     function getStats()
         external
         view
-        returns (uint256 pending, uint256 burned)
+        returns (uint256 pending, uint256 claimed)
     {
-        (pending, burned) = bond.getRoyaltyInfo(address(this), address(mfer));
+        (pending, claimed) = bond.getRoyaltyInfo(address(this), address(mfer));
+    }
+
+    function getHistoryCount() external view returns (uint256) {
+        return burnHistory.length;
+    }
+
+    function getHistories(
+        uint256 from,
+        uint256 to
+    ) external view returns (History[] memory) {
+        unchecked {
+            History[] memory histories = new History[](to - from + 1);
+            for (uint256 i = from; i <= to; i++) {
+                if (i >= burnHistory.length) return histories;
+
+                histories[i - from] = burnHistory[i];
+            }
+
+            return histories;
+        }
+    }
+
+    /**
+     * @notice Emergency function for sending back the ownership of the mferMoon token to the RESTORER
+     * @dev Only callable by the RESTORER when a critical bug found in the contract
+     */
+    function restoreOwnership() external {
+        if (msg.sender != RESTORER || !isRestorable)
+            revert("Permission denied");
+
+        bond.updateBondCreator(address(mferMoon), RESTORER);
+    }
+
+    /**
+     * @notice Disable the restorable mode, making it fully decentralized
+     * @dev Once disabled, the restoreOwnership function won't work anymore
+     */
+    function disableRestorable() external {
+        if (msg.sender != RESTORER) revert("Permission denied");
+        isRestorable = false;
     }
 }
 
@@ -158,6 +201,8 @@ interface IMCV2_Bond {
     ) external view returns (uint256, uint256);
 
     function getSteps(address token) external view returns (BondStep[] memory);
+
+    function updateBondCreator(address token, address creator) external;
 }
 
 interface IERC20 {
