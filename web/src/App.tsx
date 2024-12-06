@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import moonferImage from "/moonfer.png";
+import mferMoonImage from "/mfermoon.png";
 import { publicClient } from "./utils/rpc";
 import { MOON_ABI, MOON_ADDRESS } from "./abis/Moon";
-import { formatWei, getBurnHistoryLength } from "./utils/common";
+import { formatWei } from "./utils/common";
 import { type Address } from "viem";
 import "./App.css";
 
@@ -13,21 +13,21 @@ const commonParams = {
 
 type BurnStats = {
   pendingMferRoyalties: bigint;
-  totalMoonferBurned: bigint;
+  totalMfermoonBurned: bigint;
   totalMferCollected: bigint;
 };
 
 type BurnHistory = {
   timestamp: number;
   mferCollected: bigint;
-  moonferBurned: bigint;
+  mferMoonBurned: bigint;
   caller: Address;
 };
 
 function App() {
   const [stats, setBurnStats] = useState<BurnStats>({
     pendingMferRoyalties: 0n,
-    totalMoonferBurned: 0n,
+    totalMfermoonBurned: 0n,
     totalMferCollected: 0n,
   });
 
@@ -35,9 +35,9 @@ function App() {
 
   useEffect(() => {
     const fetchStats = async () => {
-      const totalMoonferBurned = (await publicClient.readContract({
+      const totalMfermoonBurned = (await publicClient.readContract({
         ...commonParams,
-        functionName: "totalMoonferBurned",
+        functionName: "totalMfermoonBurned",
       })) as bigint;
 
       const stats = (await publicClient.readContract({
@@ -46,42 +46,25 @@ function App() {
       })) as [bigint, bigint];
 
       setBurnStats({
-        totalMoonferBurned,
+        totalMfermoonBurned,
         pendingMferRoyalties: stats[0],
         totalMferCollected: stats[1],
       });
     };
 
     const fetchHistory = async () => {
-      setHistory([]);
-      const burnHistoryLength = await getBurnHistoryLength();
-      console.log("Burn History Length:", burnHistoryLength);
+      const histories = (await publicClient.readContract({
+        ...commonParams,
+        functionName: "getHistories",
+        args: [0, 20],
+      })) as {
+        timestamp: number;
+        mferCollected: bigint;
+        mferMoonBurned: bigint;
+        caller: Address;
+      }[];
 
-      // for (let i = 0; i < 20; i++) {
-      //   try {
-      //     const history = (await publicClient.readContract({
-      //       ...commonParams,
-      //       functionName: "burnHistory",
-      //       args: [i],
-      //     })) as [number, bigint, bigint, Address];
-
-      //     setHistory((prev) => {
-      //       const historyObj = {
-      //         timestamp: Number(history[0]),
-      //         mferCollected: history[1],
-      //         moonferBurned: history[2],
-      //         caller: history[3],
-      //       };
-      //       if (prev.some((h) => h.timestamp === historyObj.timestamp)) {
-      //         return prev;
-      //       }
-      //       return [...prev, historyObj];
-      //     });
-      //   } catch (e) {
-      //     console.log(`Error fetching history ${i}: ${e}`);
-      //     break;
-      //   }
-      //}
+      setHistory(histories);
     };
 
     fetchStats();
@@ -91,10 +74,11 @@ function App() {
   return (
     <>
       <div>
-        <img src={moonferImage} className="logo" alt="moonfer logo" />
+        <img src={mferMoonImage} className="logo" alt="mferMoon logo" />
       </div>
       <h1>
-        One small <span className="highlight">burn</span> for moonfer, one giant
+        One small <span className="highlight">burn</span> for mferMoon, one
+        giant
         <span className="mfercolor"> leap</span> for mfer-kind
       </h1>
       <div className="actions">
@@ -120,8 +104,8 @@ function App() {
           </span>{" "}
           -&gt;{" "}
           <span className="highlight">
-            {formatWei(stats.totalMoonferBurned)} MOONFER burned (
-            {formatWei(stats.totalMoonferBurned / 100_000_000n, 8)}%) @~
+            {formatWei(stats.totalMfermoonBurned)} MFERMOON burned (
+            {formatWei(stats.totalMfermoonBurned / 100_000_000n, 8)}%) @~
           </span>{" "}
         </h2>
 
@@ -129,7 +113,7 @@ function App() {
           {history.map((h) => (
             <li key={h.timestamp}>
               {formatWei(h.mferCollected)} $mfer -&gt;{" "}
-              {formatWei(h.moonferBurned)} MOONFER - by {h.caller} @{" "}
+              {formatWei(h.mferMoonBurned)} MFERMOON - by {h.caller} @{" "}
               {new Date(h.timestamp * 1000).toLocaleString()}
             </li>
           ))}

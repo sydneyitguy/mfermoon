@@ -1,4 +1,4 @@
-export const MOON_ADDRESS = "0xe3Ab60CA499408BAafc236ae6aEF2ED7074A9A96";
+export const MOON_ADDRESS = "0xCb7729dDd135758362747C4936356768541BCbc9";
 
 export const MOON_ABI = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -14,7 +14,7 @@ export const MOON_ABI = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "moonferBurned",
+        name: "mferMoonBurned",
         type: "uint256",
       },
       {
@@ -55,9 +55,45 @@ export const MOON_ABI = [
     outputs: [
       { internalType: "uint40", name: "timestamp", type: "uint40" },
       { internalType: "uint96", name: "mferCollected", type: "uint96" },
-      { internalType: "uint96", name: "moonferBurned", type: "uint96" },
+      { internalType: "uint96", name: "mferMoonBurned", type: "uint96" },
       { internalType: "address", name: "caller", type: "address" },
     ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "disableRestorable",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "from", type: "uint256" },
+      { internalType: "uint256", name: "to", type: "uint256" },
+    ],
+    name: "getHistories",
+    outputs: [
+      {
+        components: [
+          { internalType: "uint40", name: "timestamp", type: "uint40" },
+          { internalType: "uint96", name: "mferCollected", type: "uint96" },
+          { internalType: "uint96", name: "mferMoonBurned", type: "uint96" },
+          { internalType: "address", name: "caller", type: "address" },
+        ],
+        internalType: "struct Moon.History[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getHistoryCount",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
@@ -66,7 +102,7 @@ export const MOON_ABI = [
     name: "getStats",
     outputs: [
       { internalType: "uint256", name: "pending", type: "uint256" },
-      { internalType: "uint256", name: "burned", type: "uint256" },
+      { internalType: "uint256", name: "claimed", type: "uint256" },
     ],
     stateMutability: "view",
     type: "function",
@@ -80,7 +116,21 @@ export const MOON_ABI = [
   },
   {
     inputs: [],
+    name: "isRestorable",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "mfer",
+    outputs: [{ internalType: "contract IERC20", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "mferMoon",
     outputs: [{ internalType: "contract IERC20", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
@@ -94,21 +144,14 @@ export const MOON_ABI = [
   },
   {
     inputs: [],
-    name: "moonfer",
-    outputs: [{ internalType: "contract IERC20", name: "", type: "address" }],
-    stateMutability: "view",
+    name: "restoreOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "totalMferCollected",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalMoonferBurned",
+    name: "totalMfermoonBurned",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
