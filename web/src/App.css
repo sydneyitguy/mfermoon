@@ -53,11 +53,12 @@ h2 {
 }
 
 .actions h2 {
-  margin: 0;
+  margin-top: 2em;
+  margin-bottom: 0;
 }
 
 .actions button {
-  margin-top: 1em;
+  margin-top: 0.2em;
 }
 
 .stats {
@@ -78,7 +79,7 @@ h2 {
   padding: 0;
 }
 
-.button, .button:hover {
+.button, .button:hover, .button:visited, .button:active {
   position: relative;
   cursor: pointer;
   display: inline-block;
@@ -94,6 +95,7 @@ h2 {
   padding: 0 1em;
   will-change: filter;
   transition: filter 500ms;
+  text-decoration: none;
 }
 
 .button:hover, .button:active, .button:focus {
