@@ -157,7 +157,7 @@ function App() {
         <img src={mferMoonImage} className="logo" alt="mferMoon logo" />
       </div>
       <h1>
-        One small <span className="highlight">burn</span> for mferMoon, one
+        one small <span className="highlight">burn</span> for mfermoon, one
         giant
         <span className="mfercolor"> leap</span> for mfer-kind
       </h1>
