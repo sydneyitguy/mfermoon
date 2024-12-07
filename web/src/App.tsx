@@ -194,7 +194,7 @@ function App() {
           MOON @~
         </button>
         <div>
-          caller compensation:{" "}
+          caller reward:{" "}
           <span className="mfercolor">
             {formatWei(stats.pendingMferRoyalties / 100n)} $mfer
           </span>
