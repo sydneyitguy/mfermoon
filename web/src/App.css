@@ -22,6 +22,15 @@ body {
   text-align: center;
 }
 
+a, a:visited {
+  color: #00E;
+  text-decoration: underline;
+}
+a:hover, a:active {
+  color: #5861ff;
+  text-decoration: underline;
+}
+
 h1 {
   font-size: 3em;
 }
@@ -43,24 +52,96 @@ h2 {
   color: #00E;
 }
 
-.moon-button {
-  background-color: #FE8B92;
-  color: #FFF;
-  border: 8px solid #FFF;
-  font-size: 3em;
-  border-radius: 10px;
-  padding: 0 1em;
-  outline: none;
-  will-change: filter;
-  transition: filter 500ms;
-  filter: drop-shadow(0 0 2em #ffffa4);
+.actions h2 {
+  margin: 0;
 }
-.moon-button:hover {
-  border-color: #FFF;
-  outline: none;
-  filter: drop-shadow(0 0 2em #FE8B92);
+
+.actions button {
+  margin-top: 1em;
 }
 
 .stats {
   margin-top: 3em;
+}
+
+.stats h1 {
+  margin: 0;
+}
+
+.stats h2 {
+  margin: 0;
+}
+
+.history {
+  list-style: none;
+  margin: 0 0 4em 0;
+  padding: 0;
+}
+
+.button, .button:hover {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  white-space: nowrap;
+  background: #fe8b92;
+  border-radius: 8px;
+  border: 0px solid rgba(0%,0%,0%,0.2);
+  border-width: 0px 0px 5px 0px;
+  padding: 9px 15px 6px 15px;
+  box-shadow: inset 0px 1px 3px rgba(255,255,255,.4);
+  color: #fff;
+  font-size: 3em;
+  padding: 0 1em;
+  will-change: filter;
+  transition: filter 500ms;
+}
+
+.button:hover, .button:active, .button:focus {
+  outline: none;
+  filter: drop-shadow(0 0 2em #ffff76);
+}
+
+.button.disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+/* Loading state */
+.button.loading {
+  cursor: not-allowed;
+}
+
+.button.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  background: rgba(0, 0, 0, 0.8); /* 80% black overlay */
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.button.loading::after {
+  content: '🌕';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(180deg);
+  z-index: 2; /* Above the overlay */
+  animation: bounce 1.2s infinite;
+  color: #fff;
+}
+
+/* Bouncing animation for the moon */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translate(-50%, -50%) rotate(180deg);
+  }
+  40% {
+    transform: translate(-50%, -60%) rotate(180deg);
+  }
+  60% {
+    transform: translate(-50%, -55%) rotate(180deg);
+  }
 }
