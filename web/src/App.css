@@ -145,3 +145,29 @@ h2 {
     transform: translate(-50%, -55%) rotate(180deg);
   }
 }
+
+.gh-button, .gh-button:hover, .gh-button:active, .gh-button:visited {
+  display: inline-block;
+  padding: 0.278em 0.556em;
+  background: #eee;
+  border: 1px solid #d5d5d5;
+  border-radius: 0.222em;
+  color: #333;
+  line-height: 1.111em;
+  transition: background 0.2s;
+  text-decoration: none;
+  outline: none;
+  will-change: filter;
+  transition: filter 500ms;
+}
+
+.gh-button:hover {
+  filter: drop-shadow(0 0 2em #ffff76);
+}
+
+.gh-button .icon {
+  height: 20px;
+  fill: currentColor;
+  vertical-align: bottom;
+  margin-right: 0.2em;
+}
