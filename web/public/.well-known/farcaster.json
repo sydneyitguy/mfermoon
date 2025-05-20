@@ -15,13 +15,6 @@
     "tagline": "Moon it, get tendies.",
     "ogTitle": "Mfermoon Mooning AF",
     "ogDescription": "Burn $MFERMOON, get some $mfers. Moon it now!",
-    "ogImageUrl": "https://mfermoon.com/og.png",
-    "requiredChains": [
-      "eip155:8453"
-    ],
-    "requiredCapabilities": [
-      "wallet.getEvmProvider",
-      "wallet.sendTransaction"
-    ]
+    "ogImageUrl": "https://mfermoon.com/og.png"
   }
 }
