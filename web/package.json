@@ -11,9 +11,12 @@
     "deploy": "npm run build && gh-pages -d dist && rm -rf dist"
   },
   "dependencies": {
+    "@farcaster/frame-sdk": "^0.0.45",
+    "@farcaster/frame-wagmi-connector": "^0.0.34",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "viem": "^2.21.54"
+    "viem": "^2.30.0",
+    "wagmi": "^2.15.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
