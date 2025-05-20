@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist --cname mfermoon.com --dotfiles --nojekyll && rm -rf dist"
+    "deploy": "npm run build && rm dist/.DS_Store && gh-pages -d dist --cname mfermoon.com --dotfiles --nojekyll && rm -rf dist"
   },
   "dependencies": {
     "@farcaster/frame-sdk": "^0.0.45",
