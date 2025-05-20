@@ -18,3 +18,5 @@
 # Environment files
 **/.env*
 **/!.env.example
+
+.DS_Store
