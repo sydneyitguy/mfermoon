@@ -25,12 +25,12 @@ body {
 a, a:visited {
   /* color: #00E; */
   color: #FE8B92;
-  text-decoration: underline;
+  text-decoration: none;
 }
 a:hover, a:active {
   color: #FE8B92;
   /* color: #5861ff; */
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 h1 {
@@ -85,6 +85,18 @@ h2 {
   list-style: none;
   margin: 0 0 4em 0;
   padding: 0;
+}
+
+.history li {
+  margin-bottom: 1em;
+}
+
+.history li .history-item {
+  font-size: 1.5em;
+}
+
+.history li .stats-sub {
+  font-size: 1em;
 }
 
 .button, .button:hover, .button:visited, .button:active {
@@ -219,4 +231,12 @@ h2 {
 
 .round-image {
   border-radius: 50%;
+}
+
+.pfp-history-image {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
 }

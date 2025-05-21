@@ -22,6 +22,9 @@ import {
 } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+// Restricted to localhost, mfermoon.com
+const NEYNAR_API_KEY = "7284512B-F4AA-4907-AED9-B338E2DD214A";
+
 const commonParams = {
   address: MOON_ADDRESS as Address,
   abi: MOON_ABI,
@@ -38,6 +41,13 @@ interface FarcasterUser {
   // Add other properties you might need from the user context
 }
 
+// Define a type for Neynar User Profile data
+interface NeynarUserProfile {
+  username: string;
+  displayName: string;
+  pfpUrl: string;
+}
+
 type BurnStats = {
   pendingMferRoyalties: bigint;
   totalMfermoonBurned: bigint;
@@ -49,6 +59,7 @@ type BurnHistory = {
   mferCollected: bigint;
   mferMoonBurned: bigint;
   caller: Address;
+  neynarUser?: NeynarUserProfile | null; // Added for Farcaster user data
 };
 
 // Wagmi Config
@@ -112,7 +123,7 @@ function MoonAppContent() {
   };
 
   const fetchHistory = async () => {
-    let historiesData = (await publicClient.readContract({
+    let contractHistories = (await publicClient.readContract({
       ...commonParams,
       functionName: "getHistories",
       args: [0, 20],
@@ -122,8 +133,70 @@ function MoonAppContent() {
       mferMoonBurned: bigint;
       caller: Address;
     }[];
-    historiesData = historiesData.filter((h) => h.timestamp > 0).reverse();
-    setHistory(historiesData);
+
+    contractHistories = contractHistories
+      .filter((h) => h.timestamp > 0)
+      .reverse();
+
+    if (contractHistories.length === 0) {
+      setHistory([]);
+      return;
+    }
+
+    const uniqueCallers = Array.from(
+      new Set(contractHistories.map((h) => h.caller.toLowerCase() as Address))
+    );
+    const farcasterUsersMap = new Map<Address, NeynarUserProfile>();
+
+    if (uniqueCallers.length > 0 && NEYNAR_API_KEY) {
+      try {
+        const addressesQueryParam = uniqueCallers.join(",");
+        const response = await fetch(
+          `https://api.neynar.com/v2/farcaster/user/bulk-by-address?addresses=${addressesQueryParam}&api_key=${NEYNAR_API_KEY}`
+        );
+
+        if (!response.ok) {
+          console.error(
+            "Neynar API error:",
+            response.status,
+            await response.text()
+          );
+        } else {
+          const neynarData = await response.json();
+          for (const addressKey in neynarData) {
+            // Ensure the key is a valid address and exists in our uniqueCallers list
+            // and that data for this address is an array with at least one user profile
+            if (
+              Object.prototype.hasOwnProperty.call(neynarData, addressKey) &&
+              neynarData[addressKey] &&
+              neynarData[addressKey].length > 0
+            ) {
+              const userProfile = neynarData[addressKey][0]; // Take the first profile
+              if (userProfile.username && userProfile.pfp_url) {
+                farcasterUsersMap.set(addressKey as Address, {
+                  username: userProfile.username,
+                  pfpUrl: userProfile.pfp_url,
+                  displayName: userProfile.display_name,
+                });
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error(
+          "Failed to fetch or process Farcaster user data from Neynar:",
+          error
+        );
+      }
+    }
+
+    const augmentedHistories: BurnHistory[] = contractHistories.map((h) => ({
+      ...h,
+      neynarUser:
+        farcasterUsersMap.get(h.caller.toLowerCase() as Address) || null,
+    }));
+
+    setHistory(augmentedHistories);
   };
 
   useEffect(() => {
@@ -371,14 +444,42 @@ function MoonAppContent() {
         <ul className="history">
           {history.map((h) => (
             <li key={h.timestamp}>
-              <span className="mfercolor">
-                {formatWei(h.mferCollected)} $mfer
-              </span>{" "}
-              -&gt;{" "}
-              <span className="highlight">
-                {formatWei(h.mferMoonBurned)} MFERMOON
-              </span>{" "}
-              @ {new Date(h.timestamp * 1000).toLocaleString()}
+              <div className="history-item">
+                <span className="mfercolor">
+                  {formatWei(h.mferCollected)} $mfer
+                </span>{" "}
+                -&gt;{" "}
+                <span className="highlight">
+                  {formatWei(h.mferMoonBurned)} MFERMOON
+                </span>
+              </div>
+              <div className="history-sub">
+                {new Date(h.timestamp * 1000).toLocaleString()} - by{" "}
+                {h.neynarUser ? (
+                  <>
+                    <img
+                      src={h.neynarUser.pfpUrl}
+                      alt={h.neynarUser.displayName || h.neynarUser.username}
+                      className="pfp-history-image"
+                    />
+                    <a
+                      href={`https://farcaster.xyz/${h.neynarUser.username}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      @{h.neynarUser.username}
+                    </a>
+                  </>
+                ) : (
+                  <a
+                    href={`https://basescan.org/address/${h.caller}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {`${h.caller.slice(0, 6)}...${h.caller.slice(-4)}`}
+                  </a>
+                )}
+              </div>
             </li>
           ))}
         </ul>
