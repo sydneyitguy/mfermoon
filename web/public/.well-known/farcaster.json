@@ -11,7 +11,7 @@
     "iconUrl": "https://mfermoon.com/mfermoon-1024.png",
     "buttonTitle": "🌕-'",
     "splashImageUrl": "https://mfermoon.com/mfermoon-200x200.png",
-    "splashBackgroundColor": "#FFD700",
+    "splashBackgroundColor": "#000000",
     "subtitle": "just click and get paid $mfer",
     "description": "MFERMOON is a $mfer-backed child token with 10% sell royalties. This contract claims royalties & burns $MFERMOON. Call moon() to burn & get 1% reward back, fam.",
     "primaryCategory": "finance",
