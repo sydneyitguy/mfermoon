@@ -100,10 +100,17 @@ h2 {
   box-shadow: inset 0px 1px 3px rgba(255,255,255,.4);
   color: #fff;
   font-size: 3em;
-  padding: 0 1em;
+  padding: 0 0.75em;
   will-change: filter;
   transition: filter 500ms;
   text-decoration: none;
+}
+
+.button img {
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  vertical-align: middle;
 }
 
 .button:hover, .button:active, .button:focus {
@@ -196,4 +203,20 @@ h2 {
   font-size: 1em;
   color: #fff;
   margin-top: 0.5em;
+}
+
+.dex-links {
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+  margin-top: 1em;
+}
+
+.dex-links img {
+  width: 24px;
+  height: 24px;
+}
+
+.round-image {
+  border-radius: 50%;
 }

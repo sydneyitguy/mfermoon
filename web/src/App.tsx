@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import mferMoonImage from "/mfermoon.png";
+import matchaIcon from "/matcha.svg";
+import uniswapIcon from "/uniswap.png";
+import geckoIcon from "/gecko-terminal.svg";
+import mintClubIcon from "/mintclub.svg";
 import { publicClient } from "./utils/rpc";
 import { MOON_ABI, MOON_ADDRESS } from "./abis/Moon";
 import { formatWei } from "./utils/common";
@@ -233,8 +237,44 @@ function MoonAppContent() {
       </h1>
 
       <a className="button" href="https://mint.club/token/base/MFERMOON">
+        <img
+          src={mintClubIcon}
+          width={48}
+          height={48}
+          alt="Mint Club"
+          className="round-image"
+        />
         Buy $MFERMOON
       </a>
+      <p>
+        <a
+          href="https://basescan.org/token/0xF6F035883ef2536f0E262e592cF3ACfE59F0832B"
+          target="_blank"
+          style={{ color: "#fff", textDecoration: "none" }}
+        >
+          CA: 0xF6F035883ef2536f0E262e592cF3ACfE59F0832B
+        </a>
+      </p>
+      <p className="dex-links">
+        <a
+          href="https://www.geckoterminal.com/base/pools/0x1a5db9fe8670b3798c97f5190dd662a04e77203f62f38f3893ad09d5c601cd1c"
+          target="_blank"
+        >
+          <img src={geckoIcon} alt="Coingecko Terminal" />
+        </a>
+        <a
+          href="https://matcha.xyz/tokens/base/eth?buyChain=8453&buyAddress=0xf6f035883ef2536f0e262e592cf3acfe59f0832b&sellAmount=0.01"
+          target="_blank"
+        >
+          <img src={matchaIcon} alt="Matcha DEX" />
+        </a>
+        <a
+          href="https://app.uniswap.org/swap?chain=base&inputCurrency=NATIVE&outputCurrency=0xf6f035883ef2536f0e262e592cf3acfe59f0832b"
+          target="_blank"
+        >
+          <img src={uniswapIcon} className="round-image" alt="Uniswap DEX" />
+        </a>
+      </p>
 
       <div className="actions">
         <h2>
