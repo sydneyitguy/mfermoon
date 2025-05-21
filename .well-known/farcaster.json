@@ -1,4 +1,9 @@
 {
+  "accountAssociation": {
+    "header": "eyJmaWQiOjgxNTEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgyYkQyQjZFODhCNjY1M0JCMzYxNTk2MTA5MEQ0MjFhYzU4ZTQ0QmU0In0",
+    "payload": "eyJkb21haW4iOiJtZmVybW9vbi5jb20ifQ",
+    "signature": "MHg1NzljNWI5OTA4YTI2ZmNmNWY1NGNjYmU2NDhlZWE1MDJjMzIzZGRmMWMzMGFlZWU1Yzg3YTNjNmJhMWVhNzE4NWQ3NGY0ZjA4ZjdhM2NmNDM0OWFjYjJiMmUwOGMxMjA2OTc4ZmI3YmVhODNjOGQzZTViODNjYmI0MDRmMzdmOTFj"
+  },
   "frame": {
     "version": "1",
     "name": "mfermoon 🌕",
@@ -15,13 +20,6 @@
     "tagline": "Moon it, get tendies.",
     "ogTitle": "Mfermoon Mooning AF",
     "ogDescription": "Burn $MFERMOON, get some $mfers. Moon it now!",
-    "ogImageUrl": "https://mfermoon.com/og.png",
-    "requiredChains": [
-      "eip155:8453"
-    ],
-    "requiredCapabilities": [
-      "wallet.getEvmProvider",
-      "wallet.sendTransaction"
-    ]
+    "ogImageUrl": "https://mfermoon.com/og.png"
   }
 }
