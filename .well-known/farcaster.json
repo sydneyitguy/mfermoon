@@ -13,12 +13,12 @@
     "splashImageUrl": "https://mfermoon.com/mfermoon-200x200.png",
     "splashBackgroundColor": "#000000",
     "subtitle": "mfers are mooning together!",
-    "description": "MFERMOON is a $mfer-backed child token with 10% sell royalties. This contract claims royalties & burns $MFERMOON. Call moon() to burn & get 1% reward back, fam.",
+    "description": "The Moon contract collects royalties from MFERMOON trades and burns them. Just call moon() to burn the royalties and score a 1% reward for yourself, fam.",
     "primaryCategory": "finance",
     "tags": ["mintclub", "burn", "earn", "reward", "mfer"],
     "heroImageUrl": "https://mfermoon.com/og.png",
     "tagline": "mfers are mooning together!",
-    "ogTitle": "mfermoon 🌕",
+    "ogTitle": "mfermoon",
     "ogDescription": "mfers are mooning together!",
     "ogImageUrl": "https://mfermoon.com/og.png"
   }
