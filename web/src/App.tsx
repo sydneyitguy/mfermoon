@@ -123,10 +123,28 @@ function MoonAppContent() {
   };
 
   const fetchHistory = async () => {
+    const historyCount = (await publicClient.readContract({
+      ...commonParams,
+      functionName: "getHistoryCount", // Assuming this function exists
+    })) as bigint;
+
+    if (historyCount === 0n) {
+      setHistory([]);
+      return;
+    }
+
+    const fetchCount = 20;
+    const startIndex =
+      historyCount > BigInt(fetchCount)
+        ? historyCount - BigInt(fetchCount)
+        : 0n;
+
+    const toArg = historyCount - 1n; // Calculate the 'to' argument (inclusive last index)
+
     let contractHistories = (await publicClient.readContract({
       ...commonParams,
       functionName: "getHistories",
-      args: [0, 20],
+      args: [startIndex, toArg], // Corrected: use startIndex (as from) and toArg
     })) as {
       timestamp: number;
       mferCollected: bigint;
