@@ -23,7 +23,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Restricted to localhost, mfermoon.com
-const NEYNAR_API_KEY = "7284512B-F4AA-4907-AED9-B338E2DD214A";
+const NEYNAR_API_KEY = import.meta.env.VITE_NEYNAR_API_KEY;
 
 const commonParams = {
   address: MOON_ADDRESS as Address,
