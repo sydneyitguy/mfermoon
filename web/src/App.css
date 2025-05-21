@@ -83,7 +83,7 @@ h2 {
 
 .history {
   list-style: none;
-  margin: 0 0 4em 0;
+  margin: 1em 0 4em 0;
   padding: 0;
 }
 
@@ -91,11 +91,18 @@ h2 {
   margin-bottom: 1em;
 }
 
-.history li .history-item {
+.history li .history-entry-card {
+  background-color: rgba(255, 255, 255, 0.05); /* Mild white with low opacity */
+  border-radius: 8px;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+.history li .history-entry-card .history-item {
   font-size: 1.5em;
 }
 
-.history li .stats-sub {
+.history li .history-entry-card .stats-sub {
   font-size: 1em;
 }
 
@@ -240,3 +247,4 @@ h2 {
   margin-right: 5px;
   vertical-align: middle;
 }
+

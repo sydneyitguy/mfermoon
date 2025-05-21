@@ -444,41 +444,43 @@ function MoonAppContent() {
         <ul className="history">
           {history.map((h) => (
             <li key={h.timestamp}>
-              <div className="history-item">
-                <span className="mfercolor">
-                  {formatWei(h.mferCollected)} $mfer
-                </span>{" "}
-                -&gt;{" "}
-                <span className="highlight">
-                  {formatWei(h.mferMoonBurned)} MFERMOON
-                </span>
-              </div>
-              <div className="history-sub">
-                {new Date(h.timestamp * 1000).toLocaleString()} - by{" "}
-                {h.neynarUser ? (
-                  <>
-                    <img
-                      src={h.neynarUser.pfpUrl}
-                      alt={h.neynarUser.displayName || h.neynarUser.username}
-                      className="pfp-history-image"
-                    />
+              <div className="history-entry-card">
+                <div className="history-item">
+                  <span className="mfercolor">
+                    {formatWei(h.mferCollected)} $mfer
+                  </span>{" "}
+                  -&gt;{" "}
+                  <span className="highlight">
+                    {formatWei(h.mferMoonBurned)} MFERMOON
+                  </span>
+                </div>
+                <div className="history-sub">
+                  {new Date(h.timestamp * 1000).toLocaleString()} - by{" "}
+                  {h.neynarUser ? (
+                    <>
+                      <img
+                        src={h.neynarUser.pfpUrl}
+                        alt={h.neynarUser.displayName || h.neynarUser.username}
+                        className="pfp-history-image"
+                      />
+                      <a
+                        href={`https://farcaster.xyz/${h.neynarUser.username}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        @{h.neynarUser.username}
+                      </a>
+                    </>
+                  ) : (
                     <a
-                      href={`https://farcaster.xyz/${h.neynarUser.username}`}
+                      href={`https://basescan.org/address/${h.caller}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      @{h.neynarUser.username}
+                      {`${h.caller.slice(0, 6)}...${h.caller.slice(-4)}`}
                     </a>
-                  </>
-                ) : (
-                  <a
-                    href={`https://basescan.org/address/${h.caller}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {`${h.caller.slice(0, 6)}...${h.caller.slice(-4)}`}
-                  </a>
-                )}
+                  )}
+                </div>
               </div>
             </li>
           ))}
