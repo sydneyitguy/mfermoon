@@ -327,7 +327,10 @@ function MoonAppContent() {
         <span className="mfercolor"> leap</span> for mfer-kind
       </h1>
 
-      <a className="button" href="https://mint.club/token/base/MFERMOON">
+      <a
+        className="button"
+        href="https://farcaster.xyz/?launchFrameUrl=https%3A%2F%2Fmint.club%2Ftoken%2Fbase%2FMFERMOON"
+      >
         <img
           src={mintClubIcon}
           width={48}
