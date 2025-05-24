@@ -329,7 +329,8 @@ function MoonAppContent() {
 
       <a
         className="button"
-        href="https://farcaster.xyz/?launchFrameUrl=https%3A%2F%2Fmint.club%2Ftoken%2Fbase%2FMFERMOON"
+        href="https://mint.club/token/base/MFERMOON"
+        target="_blank"
       >
         <img
           src={mintClubIcon}
